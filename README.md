@@ -4,7 +4,9 @@ A **Claude skill** that turns a scenario, case study or knowledge base into a sh
 
 Give it a story in plain English. It works out what *kind* of story it is, how many characters it needs, and which facts must appear on screen — then builds a film that directs the viewer's eye, tells a real story, and ends with a recap.
 
-![The Storify cast](examples/cast-sheet.png)
+[![Watch the sample film](examples/storify-video-thumb.jpg)](examples/storify-video.mp4)
+
+<sub>▶ A sample film made with Storify: [`examples/storify-video.mp4`](examples/storify-video.mp4) (2:40, 1080p, with sound).</sub>
 
 ---
 
@@ -37,6 +39,8 @@ storify/
 ├── SKILL.md                   # the workflow + all reference code (the "brain")
 └── examples/
     ├── regulatory-report-film.html   # a complete film built with the skill
+    ├── storify-video.mp4             # the same film rendered as an MP4
+    ├── storify-video-thumb.jpg       # README thumbnail
     ├── cast-reel.html                # every character, animated
     └── cast-sheet.png                # cast reference sheet
 ```
@@ -53,6 +57,8 @@ storify/
 ### The cast
 
 26 original robot characters share one construction, sketch style, set of moods and poses — so any subset of them belongs in the same world. Each has a **role hint** (analyst, data engineer, manager, QA tester…) used only for *casting*: when your story has a QA tester, the QA tester robot plays them. Role hints are never shown on screen unless the story needs them. A film uses 1 character by default and at most 4.
+
+![The Storify cast](examples/cast-sheet.png)
 
 Open [`examples/cast-reel.html`](examples/cast-reel.html) in a browser to meet them.
 
@@ -149,7 +155,7 @@ Anything after the arguments, or any attached file, is the story.
 
 ## Example
 
-[`examples/regulatory-report-film.html`](examples/regulatory-report-film.html) — a before-and-after story: an analyst's monthly regulatory report takes 65 minutes a session in chat (with errors caught every month), then gets rebuilt on a Project, knowledge base, Skill and Code Execution and drops to 30 minutes with verification still running and zero errors. Download it and open it in a browser.
+[`examples/storify-video.mp4`](examples/storify-video.mp4) (MP4, 2:40 with sound) and [`examples/regulatory-report-film.html`](examples/regulatory-report-film.html) (the interactive version) — a before-and-after story: an analyst's monthly regulatory report takes 65 minutes a session in chat (with errors caught every month), then gets rebuilt on a Project, knowledge base, Skill and Code Execution and drops to 30 minutes with verification still running and zero errors. Watch the MP4, or download the HTML and open it in a browser to click through it beat by beat.
 
 ---
 
