@@ -1,0 +1,17 @@
+{
+  "name": "storify",
+  "owner": {
+    "name": "keith-fajardo",
+    "url": "https://github.com/keith-fajardo"
+  },
+  "metadata": {
+    "description": "Storify: turn any story into a hand-drawn animated explainer film."
+  },
+  "plugins": [
+    {
+      "name": "storify",
+      "source": "./",
+      "description": "Hand-drawn animated explainer films from any story — analyses the story type and cast, then builds an interactive canvas film (HTML / artifact) or renders an MP4."
+    }
+  ]
+}

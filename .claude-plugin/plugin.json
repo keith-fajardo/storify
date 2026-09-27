@@ -1,0 +1,9 @@
+{
+  "name": "storify",
+  "description": "Turn a scenario, case study or knowledge base into a hand-drawn animated explainer film starring an original robot cast — delivered as an HTML file, a Claude artifact and/or an MP4 with a procedural soundtrack.",
+  "version": "1.0.0",
+  "author": {
+    "name": "keith-fajardo",
+    "url": "https://github.com/keith-fajardo"
+  }
+}
