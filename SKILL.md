@@ -297,8 +297,50 @@ when the story has a real lesson about choices. Never force one.
   - previous beat / play-pause-replay / next beat
   - scrubber, and a beat counter `7 / 34`
   - mode toggle: **Click-through (default, listed first)** | Autoplay
-  - speed (1x → 1.25x → 1.5x → 0.75x), sound (off by default), full screen
+  - a **speed selector**, a button showing the current speed that opens a menu of
+    0.5× / 0.75× / 1× normal / 1.25× / **1.5× (default)** / 2×. It stays visible on phones,
+    closes on selection, outside click or Esc, and ↑/↓ move through the options.
+    Use the tested code below.
+  - sound (off by default), full screen
 - Chapter chips sit below the player.
+- **Speed selector (tested code).** HTML in the bar (replaces any single speed button):
+```html
+<div class="speed" id="speedWrap">
+  <button id="spd" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="spdMenu" aria-label="Playback speed 1.5×">1.5×</button>
+  <div class="speed-menu" id="spdMenu" role="menu" aria-label="Playback speed" hidden><div class="h">Speed</div></div>
+</div>
+```
+```css
+.speed{position:relative}
+#spd{min-width:62px;justify-content:center;border:1px solid rgba(255,255,255,.22)}
+#spd[aria-expanded="true"]{background:rgba(255,255,255,.16)}
+.speed-menu{position:absolute;right:0;bottom:calc(100% + 8px);z-index:5;min-width:132px;padding:6px;border-radius:10px;
+  background:var(--bar);border:1px solid rgba(255,255,255,.18);box-shadow:0 8px 24px rgba(0,0,0,.35);display:flex;flex-direction:column;gap:2px}
+.speed-menu[hidden]{display:none}
+.speed-menu .h{font:600 11px/1 "IBM Plex Mono",monospace;letter-spacing:.06em;text-transform:uppercase;opacity:.6;padding:6px 8px 4px}
+.speed-menu button{justify-content:space-between;width:100%;padding:8px 10px}
+.speed-menu button[aria-checked="true"]{background:rgba(255,255,255,.16)}
+.speed-menu button[aria-checked="true"]::after{content:"✓"}
+```
+```js
+const SPEEDS=[.5,.75,1,1.25,1.5,2],spdMenu=document.getElementById('spdMenu'),spdWrap=document.getElementById('speedWrap');
+const spdLabel=v=>v+'×';
+SPEEDS.forEach(v=>{const b=document.createElement('button');b.type='button';b.setAttribute('role','menuitemradio');b.dataset.v=v;
+  b.textContent=v===1?'1× normal':spdLabel(v);b.onclick=e=>{e.stopPropagation();setSpeed(v);closeSpd(true);};spdMenu.appendChild(b);});
+function setSpeed(v){speedMul=v;spd.textContent=spdLabel(v);spd.setAttribute('aria-label','Playback speed '+spdLabel(v));
+  [...spdMenu.querySelectorAll('button')].forEach(b=>b.setAttribute('aria-checked',+b.dataset.v===v));}
+function openSpd(){spdMenu.hidden=false;spd.setAttribute('aria-expanded','true');
+  (spdMenu.querySelector('[aria-checked="true"]')||spdMenu.querySelector('button')).focus();}
+function closeSpd(refocus){if(spdMenu.hidden)return;spdMenu.hidden=true;spd.setAttribute('aria-expanded','false');if(refocus)spd.focus();}
+spd.onclick=e=>{e.stopPropagation();spdMenu.hidden?openSpd():closeSpd();};
+document.addEventListener('click',e=>{if(!spdWrap.contains(e.target))closeSpd();});
+spdMenu.addEventListener('keydown',e=>{const items=[...spdMenu.querySelectorAll('button')],i=items.indexOf(document.activeElement);
+  if(e.key==='Escape'){e.preventDefault();closeSpd(true);}
+  else if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();items[(i+(e.key==='ArrowDown'?1:items.length-1))%items.length].focus();}
+  e.stopPropagation();});
+setSpeed(speedMul);
+```
+  The MP4 capture hook sets `speedMul=1` in `begin()`, so rendered videos keep their tested pacing.
 - **Click-through:** the film stops after each beat and shows a pulsing "click to continue ▸"
   pill. Click, Space or → advances, and clicking during a beat finishes it.
 - **Autoplay:** clicking the canvas pauses and shows a "❚❚ paused" pill. The music keeps
@@ -762,7 +804,7 @@ function bubble(b,hx,hy){
 ```js
 /* ---------- player: beats, lead → play → hold/wait ---------- */
 BEATS.forEach(b=>b.lead=b.say?clamp(b.say.length/34,1.0,1.9):.15);
-let bi=0,phase='lead',pt=0,s=0,mode='click',paused=reduce,speedMul=1;
+let bi=0,phase='lead',pt=0,s=0,mode='click',paused=reduce,speedMul=1.5;
 let camFrom=BEATS[0].cam.slice(),camT0=0,bubbleT0=0,chapT0=0,lastChap=-1;
 const RATE=.85,HOLD=1.2;
 function enter(i,instant){const from=camNow();bi=i;s=BEATS[i].s;phase='lead';pt=0;camFrom=instant?BEATS[i].cam.slice():from;camT0=performance.now();bubbleT0=performance.now();}

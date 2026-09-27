@@ -148,7 +148,7 @@ Anything after the arguments, or any attached file, is the story.
 
 - **Click-through (default):** each beat plays, then waits. Click, tap, or press → / Space to continue; ← goes back.
 - **Autoplay:** toggle it in the player; beats advance on their own. Space pauses and resumes.
-- The player also has a scrubber, a speed button (0.75×–1.5×) and a sound toggle.
+- The player also has a scrubber, a speed selector (0.5×–2×, 1.5× by default) and a sound toggle.
 
 ---
 

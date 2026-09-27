@@ -38,9 +38,19 @@ canvas{display:block;width:100%;aspect-ratio:16/9;max-width:100%;background:#F1E
 .mode button{border-radius:0!important;padding:7px 10px!important;opacity:.6}
 .mode button[aria-pressed="true"]{background:rgba(255,255,255,.16);opacity:1}
 @media (max-width:760px){ .bar{flex-wrap:wrap} #scrub{order:10;flex-basis:100%} }
+.speed{position:relative}
+#spd{min-width:62px;justify-content:center;border:1px solid rgba(255,255,255,.22)}
+#spd[aria-expanded="true"]{background:rgba(255,255,255,.16)}
+.speed-menu{position:absolute;right:0;bottom:calc(100% + 8px);z-index:5;min-width:132px;padding:6px;border-radius:10px;
+  background:var(--bar);border:1px solid rgba(255,255,255,.18);box-shadow:0 8px 24px rgba(0,0,0,.35);display:flex;flex-direction:column;gap:2px}
+.speed-menu[hidden]{display:none}
+.speed-menu .h{font:600 11px/1 "IBM Plex Mono",monospace;letter-spacing:.06em;text-transform:uppercase;opacity:.6;padding:6px 8px 4px}
+.speed-menu button{justify-content:space-between;width:100%;padding:8px 10px}
+.speed-menu button[aria-checked="true"]{background:rgba(255,255,255,.16)}
+.speed-menu button[aria-checked="true"]::after{content:"✓"}
 .player:fullscreen{display:flex;flex-direction:column;justify-content:center;border-radius:0}
 .player:fullscreen canvas{width:min(100vw,calc((100vh - 56px) * 16 / 9));margin:0 auto}
-@media (max-width:560px){ #spd{display:none} #time{min-width:0} .bar{gap:4px;padding:8px} .bar button span{display:none} }
+@media (max-width:560px){ #time{min-width:0} .bar{gap:4px;padding:8px} .bar button span{display:none} }
 </style>
 
 <div class="wrap">
@@ -61,7 +71,10 @@ canvas{display:block;width:100%;aspect-ratio:16/9;max-width:100%;background:#F1E
         <button id="mClick" type="button" aria-pressed="true">Click-through</button>
         <button id="mAuto" type="button" aria-pressed="false">Autoplay</button>
       </div>
-      <button id="spd" type="button" aria-label="Playback speed">1x</button>
+      <div class="speed" id="speedWrap">
+        <button id="spd" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="spdMenu" aria-label="Playback speed 1.5×">1.5×</button>
+        <div class="speed-menu" id="spdMenu" role="menu" aria-label="Playback speed" hidden><div class="h">Speed</div></div>
+      </div>
       <button id="snd" type="button" aria-label="Turn sound on"></button>
       <button id="fs" type="button" aria-label="Full screen"><svg viewBox="0 0 24 24"><path d="M4 4h6v2H6v4H4zm10 0h6v6h-2V6h-4zM4 14h2v4h4v2H4zm14 0h2v6h-6v-2h4z"/></svg></button>
     </div>
@@ -535,7 +548,7 @@ let duck=-1;function setDuck(){if(!musicBus)return;const d=phase==='lead'?.55:1;
 
 /* ---------- player: beats, lead → play → hold/wait ---------- */
 BEATS.forEach(b=>b.lead=b.say?clamp(b.say.length/34,1.0,1.9):.15);
-let bi=0,phase='lead',pt=0,s=0,mode='click',paused=reduce,speedMul=1;
+let bi=0,phase='lead',pt=0,s=0,mode='click',paused=reduce,speedMul=1.5;
 let camFrom=BEATS[0].cam.slice(),camT0=0,bubbleT0=0,chapT0=0,lastChap=-1;
 const RATE=.85,HOLD=1.2;
 function enter(i,instant){const from=camNow();bi=i;s=BEATS[i].s;phase='lead';pt=0;camFrom=instant?BEATS[i].cam.slice():from;camT0=NOW();bubbleT0=NOW();}
@@ -575,7 +588,22 @@ mAuto.onclick=()=>{mode='auto';if(phase==='wait'){phase='hold';pt=0;}ui();};
 mClick.onclick=()=>{mode='click';if(phase==='hold')phase='wait';ui();};
 scrub.addEventListener('input',()=>{const v=+scrub.value;let i=0;BEATS.forEach((b,j)=>{if(v>=b.s)i=j;});bi=i;s=Math.min(v,BEATS[i].e);phase='play';pt=0;
   camFrom=BEATS[i].cam.slice();camT0=0;bubbleT0=0;ui();});
-const SPEEDS=[1,1.25,1.5,.75];spd.onclick=()=>{speedMul=SPEEDS[(SPEEDS.indexOf(speedMul)+1)%SPEEDS.length];spd.textContent=speedMul+'x';};
+const SPEEDS=[.5,.75,1,1.25,1.5,2],spdMenu=document.getElementById('spdMenu'),spdWrap=document.getElementById('speedWrap');
+const spdLabel=v=>v+'×';
+SPEEDS.forEach(v=>{const b=document.createElement('button');b.type='button';b.setAttribute('role','menuitemradio');b.dataset.v=v;
+  b.textContent=v===1?'1× normal':spdLabel(v);b.onclick=e=>{e.stopPropagation();setSpeed(v);closeSpd(true);};spdMenu.appendChild(b);});
+function setSpeed(v){speedMul=v;spd.textContent=spdLabel(v);spd.setAttribute('aria-label','Playback speed '+spdLabel(v));
+  [...spdMenu.querySelectorAll('button')].forEach(b=>b.setAttribute('aria-checked',+b.dataset.v===v));}
+function openSpd(){spdMenu.hidden=false;spd.setAttribute('aria-expanded','true');
+  (spdMenu.querySelector('[aria-checked="true"]')||spdMenu.querySelector('button')).focus();}
+function closeSpd(refocus){if(spdMenu.hidden)return;spdMenu.hidden=true;spd.setAttribute('aria-expanded','false');if(refocus)spd.focus();}
+spd.onclick=e=>{e.stopPropagation();spdMenu.hidden?openSpd():closeSpd();};
+document.addEventListener('click',e=>{if(!spdWrap.contains(e.target))closeSpd();});
+spdMenu.addEventListener('keydown',e=>{const items=[...spdMenu.querySelectorAll('button')],i=items.indexOf(document.activeElement);
+  if(e.key==='Escape'){e.preventDefault();closeSpd(true);}
+  else if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();items[(i+(e.key==='ArrowDown'?1:items.length-1))%items.length].focus();}
+  e.stopPropagation();});
+setSpeed(speedMul);
 snd.onclick=()=>{soundOn=!soundOn;if(soundOn){ensureAudio();musicOn(true);}else musicOn(false);ui();};
 fs.onclick=()=>{try{if(document.fullscreenElement)document.exitFullscreen();else{const r=player.requestFullscreen&&player.requestFullscreen();if(r&&r.catch)r.catch(()=>{});}}catch(e){}};
 const chapEl=document.getElementById('chapters');
