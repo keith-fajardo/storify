@@ -160,4 +160,4 @@ Anything after the arguments, or any attached file, is the story.
 
 ## Credit
 
-Created by [Keith Fajardo](https://github.com/keith-fajardo). Storytelling approach draws on Mayer's principles of multimedia learning, classic animation staging, the And-But-Therefore structure and the Pixar story spine. The characters are original; the skill never draws real brands' logos or mascots.
+Created by [Keith Fajardo](https://www.linkedin.com/in/imkeithfajardo/). Storytelling approach draws on Mayer's principles of multimedia learning, classic animation staging, the And-But-Therefore structure and the Pixar story spine. The characters are original; the skill never draws real brands' logos or mascots.
