@@ -167,7 +167,7 @@ Finish with one line per output, and one line on the story type and cast you cho
 | **Carlos** | data director | burgundy, tall 80×88, glasses and mustache |
 | **Diego** | AI director | violet, 78×84, orbit (atom) antenna |
 | **Myk** | HR lead | salmon, round 74×70, heart antenna |
-| **JM** | dbt developer | mauve, 76×72, red propeller beanie |
+| **MJ** | dbt developer | mauve, 76×72, red propeller beanie |
 
 Exact colors and shapes are in `CAST` in the character drawer code. A reference sheet of the
 whole cast is at `examples/cast-sheet.png` (next to this SKILL.md), and an animated cast reel
@@ -673,7 +673,7 @@ const CAST={
   carlos:{name:'Carlos',role:'data director',body:'#9C4A5E',w:80,h:88,r:24,head:'none',glasses:true,mustache:true},
   diego:{name:'Diego',role:'AI director',body:'#7A5CC7',w:78,h:84,r:28,head:'orbit'},
   myk:{name:'Myk',role:'HR lead',body:'#F29E9E',w:74,h:70,r:32,head:'heart'},
-  jm:{name:'JM',role:'dbt developer',body:'#B07AA1',w:76,h:72,r:20,head:'propeller'}};
+  mj:{name:'MJ',role:'dbt developer',body:'#B07AA1',w:76,h:72,r:20,head:'propeller'}};
 for(const k in CAST){const c=CAST[k];c.key=k;if(!c.dark)c.dark=shade(c.body,.72);}
 function heartPath(cx,cy,s){ctx.beginPath();ctx.moveTo(cx,cy+s*.9);ctx.bezierCurveTo(cx-s*1.4,cy-s*.1,cx-s*.7,cy-s*1.2,cx,cy-s*.45);ctx.bezierCurveTo(cx+s*.7,cy-s*1.2,cx+s*1.4,cy-s*.1,cx,cy+s*.9);ctx.closePath();}
 function drawHead(c,W2,hb,t,seed){

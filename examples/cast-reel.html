@@ -87,7 +87,7 @@ const CAST={
   carlos:{name:'Carlos',role:'data director',body:'#9C4A5E',w:80,h:88,r:24,head:'none',glasses:true,mustache:true},
   diego:{name:'Diego',role:'AI director',body:'#7A5CC7',w:78,h:84,r:28,head:'orbit'},
   myk:{name:'Myk',role:'HR lead',body:'#F29E9E',w:74,h:70,r:32,head:'heart'},
-  jm:{name:'JM',role:'dbt developer',body:'#B07AA1',w:76,h:72,r:20,head:'propeller'}};
+  mj:{name:'MJ',role:'dbt developer',body:'#B07AA1',w:76,h:72,r:20,head:'propeller'}};
 for(const k in CAST){const c=CAST[k];c.key=k;if(!c.dark)c.dark=shade(c.body,.72);}
 function heartPath(cx,cy,s){ctx.beginPath();ctx.moveTo(cx,cy+s*.9);ctx.bezierCurveTo(cx-s*1.4,cy-s*.1,cx-s*.7,cy-s*1.2,cx,cy-s*.45);ctx.bezierCurveTo(cx+s*.7,cy-s*1.2,cx+s*1.4,cy-s*.1,cx,cy+s*.9);ctx.closePath();}
 function drawHead(c,W2,hb,t,seed){
@@ -287,9 +287,9 @@ const ACT={
     else{const [cx,cy]=r.hands[0];sk(rr(cx-8,cy-12,16,16,3),{seed:360,fill:'#fff',lw:1.6,amp:.2});steam(cx-3,cy-14,t);}},
   diego(x,fy,t){const c=CAST.diego,a=Math.sin(t*4);const r=ch('diego',x,fy,{mood:'calm',hands:[B(c,-40,-70-a*10),B(c,40,-80+a*16)]});const [hx,hy]=r.hands[1];
     sk(ln(hx,hy,hx+26,hy-24+a*6),{closed:false,seed:361,lw:2.4,passes:1});for(let i=0;i<3;i++){const u=cyc(t*.7+i/3,1);note(x-60+i*50,fy-150-u*40,Math.sin(u*Math.PI));}},
-  jm(x,fy,t){const c=CAST.jm,p=cyc(t,4.4),bite=p>.55&&p<.6,jump=p>.6&&p<.9;
+  mj(x,fy,t){const c=CAST.mj,p=cyc(t,4.4),bite=p>.55&&p<.6,jump=p>.6&&p<.9;
     sk(ell(x+108,fy-3,32,7,20),{seed:380,fill:'#8FC4E8',lw:1.8,amp:.4});
-    const r=ch('jm',x,fy,{mood:jump?'happy':'normal',hands:[[-48,-28],B(c,40,-54-(jump?10:0))]});const [hx,hy]=r.hands[1];
+    const r=ch('mj',x,fy,{mood:jump?'happy':'normal',hands:[[-48,-28],B(c,40,-54-(jump?10:0))]});const [hx,hy]=r.hands[1];
     const tx=x+84,ty=fy-150+(jump?-10:0);sk(ln(hx,hy,tx,ty),{closed:false,seed:381,lw:3,stroke:'#8B5A2B',passes:1});
     const by=fy-8+(bite?Math.sin(t*40)*3:0);ctx.strokeStyle=INK;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(tx,ty);ctx.lineTo(x+104,by);ctx.stroke();dot(x+104,by-2,3.5,RED);
     if(jump){const u=(p-.6)/.3,fx=x+112+u*14,fy2=fy-10-Math.sin(u*Math.PI)*60;ctx.save();ctx.translate(fx,fy2);ctx.rotate(-1+u*2);
@@ -301,7 +301,7 @@ const ACT={
 
 /* ---------- layout + timeline ---------- */
 const GROUPS=[['dennice','keith','unix','karan'],['ian','chris','isa','jeson'],['joeen','vlada','cannon','wilber'],
-  ['samantha','leo','rachelle','jomari'],['mark','jack','david','ryan','jm'],['beth','dean','carlos','diego','myk']];
+  ['samantha','leo','rachelle','jomari'],['mark','jack','david','ryan','mj'],['beth','dean','carlos','diego','myk']];
 const GXP=g=>1280*(g+1)+640, FX=1280*7+640;
 const CAMK=[[0,640]],ARR=[];let tt=4.8;
 GROUPS.forEach((g,i)=>{CAMK.push([tt,i?GXP(i-1):640],[tt+1.4,GXP(i)]);ARR.push(tt+1.4);tt+=1.4+(g.length>4?7:5.8);});
